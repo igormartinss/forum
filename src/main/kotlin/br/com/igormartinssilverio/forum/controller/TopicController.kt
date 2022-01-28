@@ -4,6 +4,10 @@ import br.com.igormartinssilverio.forum.model.form.TopicCreateForm
 import br.com.igormartinssilverio.forum.model.form.TopicEditForm
 import br.com.igormartinssilverio.forum.model.view.TopicView
 import br.com.igormartinssilverio.forum.service.TopicService
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Sort
+import org.springframework.data.web.PageableDefault
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.util.UriComponentsBuilder
@@ -14,9 +18,12 @@ import javax.validation.Valid
 class TopicController(private var service: TopicService) {
 
     @GetMapping
-    fun find(): List<TopicView> {
-        val topics: List<TopicView> = service.findAll()
-        return service.findAll()
+    fun find(@PageableDefault(
+        size = 5,
+        sort = ["createdAt"],
+        direction = Sort.Direction.DESC
+    )pageable: Pageable): Page<TopicView> {
+        return service.findAll(pageable)
     }
 
     @GetMapping("/{id}")

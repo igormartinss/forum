@@ -5,7 +5,7 @@ import javax.validation.constraints.NotNull
 import javax.validation.constraints.Size
 
 data class TopicCreateForm(
-    @field:NotEmpty
+    @field:NotEmpty(message = "Título não deve ser vazio!")
     @field:Size(min = 5)
     val title: String,
 
