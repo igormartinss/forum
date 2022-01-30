@@ -14,7 +14,6 @@ class TopicFormMapper(
 
     override fun map(t: TopicCreateForm): Topic {
         return Topic(
-            id = 1,
             title = t.title,
             message = t.message,
             course = courseService.findById(t.courseId),
