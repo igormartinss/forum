@@ -4,6 +4,8 @@ import br.com.igormartinssilverio.forum.model.form.TopicCreateForm
 import br.com.igormartinssilverio.forum.model.form.TopicEditForm
 import br.com.igormartinssilverio.forum.model.view.TopicView
 import br.com.igormartinssilverio.forum.service.TopicService
+import org.springframework.cache.annotation.CacheEvict
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
@@ -18,6 +20,7 @@ import javax.validation.Valid
 class TopicController(private var service: TopicService) {
 
     @GetMapping
+    @Cacheable(value = ["topics"])
     fun find(@PageableDefault(
         size = 5,
         sort = ["createdAt"],
@@ -32,6 +35,7 @@ class TopicController(private var service: TopicService) {
     }
 
     @PostMapping
+    @CacheEvict(value = ["topics"], allEntries = true)
     fun create(
         @RequestBody @Valid topicToCreate: TopicCreateForm,
         uriComponent: UriComponentsBuilder
@@ -43,6 +47,7 @@ class TopicController(private var service: TopicService) {
     }
 
     @PutMapping("/{id}")
+    @CacheEvict(value = ["topics"], allEntries = true)
     fun edit(@RequestBody @Valid topicToEdit: TopicEditForm, @PathVariable id: Long): ResponseEntity<TopicView> {
         val topicView = service.edit(topicToEdit, id)
 
@@ -50,6 +55,7 @@ class TopicController(private var service: TopicService) {
     }
 
     @DeleteMapping("/{id}")
+    @CacheEvict(value = ["topics"], allEntries = true)
     fun delete(@PathVariable id: Long) {
         service.delete(id)
     }
